@@ -1,7 +1,10 @@
 <?php
 include 'connect.php';
 
-$sql = "SELECT * FROM cashiers";
+$sql = "SELECT cashiers.CashierID, cashiers.Name, cashiers.Username, cashiers.Password, cashiers.FlowID, COUNT(sales.SaleID) AS TotalSales
+        FROM cashiers
+        LEFT JOIN sales ON cashiers.CashierID = sales.CashierID
+        GROUP BY cashiers.CashierID";
 $result = $con->query($sql);
 
 if ($result === false) {
@@ -17,7 +20,7 @@ if ($result === false) {
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Cashier Details</h1>
+        <h1 class="mb-4">Cashier Details and Sales Tracking</h1>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -26,6 +29,7 @@ if ($result === false) {
                     <th>Username</th>
                     <th>Password</th>
                     <th>FlowID</th>
+                    <th>Total Sales</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,10 +42,11 @@ if ($result === false) {
                         echo "<td>".$row["Username"]."</td>";
                         echo "<td>".$row["Password"]."</td>";
                         echo "<td>".$row["FlowID"]."</td>";
+                        echo "<td>".$row["TotalSales"]."</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No records found</td></tr>";
+                    echo "<tr><td colspan='6'>No records found</td></tr>";
                 }
                 ?>
             </tbody>
