@@ -23,7 +23,7 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Customer Details</h1>
-        <a href="/log1/create.php" class="btn btn-success mb-3">Add New</a>
+        <a href="customer_create.php" class="btn btn-success mb-3">Add New</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -44,8 +44,8 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
                         echo "<td>".$row["Email"]."</td>";
                         echo "<td>".$row["Phone"]."</td>";
                         echo "<td>
-                                <a href='/log1/customer_edit.php".$row["CustomerID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='/log1/customer_delete.php".$row["CustomerID"]."' class='btn btn-danger btn-sm'>Delete</a>
+                                <a href='customer_edit.php?id=".$row["CustomerID"]."' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='customer_delete.php?id=".$row["CustomerID"]."' class='btn btn-danger btn-sm'>Delete</a>
                               </td>";
                         echo "</tr>";
                     }

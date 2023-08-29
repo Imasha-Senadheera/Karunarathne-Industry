@@ -37,8 +37,8 @@ $result = $con->query($sql);
                         echo "<td>".$row["Price"]."</td>";
                         echo "<td>".$row["Quantity"]."</td>";
                         echo "<td>
-                                <a href='/log1/edit.php".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='/log1/delete.php".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>
+                                <a href='edit_product.php?id=".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='delete_product.php?id=".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>
                               </td>";
                         echo "</tr>";
                     }
