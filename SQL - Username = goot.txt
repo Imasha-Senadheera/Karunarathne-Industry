@@ -1,0 +1,6 @@
+SQL - Username = "goot"
+      Password = " "
+
+Used IDE = VS code 
+Database = Mysql
+Technologies = PHP/HTML/Boostrap/JS
