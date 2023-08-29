@@ -1,45 +1,40 @@
 <?php
-include 'connect.php';
+include 'connect.php'; // Include the database connection
 
-// Process bill submission
+// Initialize variables
+$successMessage = "";
+
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cashierID = $_POST["cashierID"];
+    $customerID = $_POST["customerID"];
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
     $productID = $_POST["productID"];
     $quantity = $_POST["quantity"];
+    $discountPercentage = $_POST["discountPercentage"];
+    $cashierID = $_POST["cashier"];
 
-    // Fetch product details for price and discount
-    $productQuery = "SELECT Price, DiscountPercentage FROM products LEFT JOIN discounts ON products.ProductID = discounts.ProductID WHERE products.ProductID = ?";
+    // Calculate total bill amount after discount
+    $productQuery = "SELECT Price FROM products WHERE ProductID = ?";
     $stmt = $con->prepare($productQuery);
     $stmt->bind_param("i", $productID);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $product = $result->fetch_assoc();
+    $stmt->bind_result($price);
+    $stmt->fetch();
+    $stmt->close();
 
-    $price = $product["Price"];
-    $discountPercentage = $product["DiscountPercentage"];
-
-    // Calculate total amount and apply discount
     $totalAmount = $price * $quantity;
-    if ($discountPercentage > 0) {
-        $discountAmount = ($totalAmount * $discountPercentage) / 100;
-        $totalAmount -= $discountAmount;
-    }
+    $discountAmount = $totalAmount * ($discountPercentage / 100);
+    $finalAmount = $totalAmount - $discountAmount;
 
-    // Insert sale record into the Sales table
-    $insertQuery = "INSERT INTO sales (CashierID, ProductID, SaleDate, Quantity, TotalAmount) VALUES (?, ?, NOW(), ?, ?)";
+    // Insert data into the database and perform other necessary operations
+    $insertQuery = "INSERT INTO orders (CustomerID, CashierID, ProductID, Quantity, TotalAmount, DiscountPercentage, FinalAmount) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $con->prepare($insertQuery);
-    $stmt->bind_param("iiid", $cashierID, $productID, $quantity, $totalAmount);
+    $stmt->bind_param("iiiiidd", $customerID, $cashierID, $productID, $quantity, $totalAmount, $discountPercentage, $finalAmount);
 
     if ($stmt->execute()) {
-        // Update stock quantity
-        $updateStockQuery = "UPDATE stock SET QuantitySold = QuantitySold + ?, QuantityRemaining = QuantityRemaining - ? WHERE ProductID = ?";
-        $stmt = $con->prepare($updateStockQuery);
-        $stmt->bind_param("iii", $quantity, $quantity, $productID);
-        $stmt->execute();
-
-        // Successful sale and update
-        header("Location: sales.php"); // Redirect back to sales.php
-        exit();
+        $successMessage = "Data successfully updated!";
     } else {
         // Error in insertion
         echo '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';
@@ -49,128 +44,144 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bill</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <title>Bill Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Billing Section</h1>
-        <form action="bill.php" method="POST">
-            <div class="form-group">
-                <label for="cashierID">Cashier:</label>
-                <select class="form-control" id="cashierID" name="cashierID" required>
-                    <?php
-                    // Fetch cashier details for dropdown
-                    $cashierQuery = "SELECT CashierID, Name FROM cashiers";
-                    $cashierResult = $con->query($cashierQuery);
+        <!-- Display success message if applicable -->
+        <?php if (!empty($successMessage)) : ?>
+            <div class="alert alert-success"><?php echo $successMessage; ?></div>
+        <?php endif; ?>
 
-                    if ($cashierResult->num_rows > 0) {
-                        while ($cashier = $cashierResult->fetch_assoc()) {
-                            echo "<option value='" . $cashier["CashierID"] . "'>" . $cashier["Name"] . "</option>";
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="productID">Product:</label>
-                <select class="form-control" id="productID" name="productID" required>
-                    <?php
-                    // Fetch product details for dropdown
-                    $productQuery = "SELECT ProductID, Name FROM products";
-                    $productResult = $con->query($productQuery);
+        <h1 class="mb-4">Bill Form</h1>
+        <form action="bill.php" method="post">
+            <!-- Customer Details Section -->
+        <div class="mb-4">
+            <h2>Customer Details Section</h2>
+            <form action="bill.php" method="post">
+                <div class="form-group">
+                    <label for="customerID">CustomerID:</label>
+                    <input type="text" class="form-control" id="customerID" name="customerID" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                </div>
+            </form>
+        </div>
+            
+            
+             
+            <!-- Sales Details Section -->
+            <div class="mb-4">
+                <h2>Select Products</h2>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="product">Product:</label>
+                        <select class="form-control" id="product" name="product" required>
+                            <?php
+                            include 'connect.php'; // Include the database connection
 
-                    if ($productResult->num_rows > 0) {
-                        while ($product = $productResult->fetch_assoc()) {
-                            echo "<option value='" . $product["ProductID"] . "'>" . $product["Name"] . "</option>";
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
-            </div>
-            <button type="button" class="btn btn-primary" id="generateBillButton">Generate Bill</button>
-        </form>
-        
-        <div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="billModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="billModalLabel">Bill Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                            // Fetch product names from the database and populate dropdown
+                            $productQuery = "SELECT ProductID, Name FROM products";
+                            $productResult = $con->query($productQuery);
+
+                            if ($productResult->num_rows > 0) {
+                                while ($product = $productResult->fetch_assoc()) {
+                                    echo "<option value='" . $product["ProductID"] . "'>" . $product["Name"] . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
-                    <div class="modal-body" id="billModalBody">
-                        <!-- Bill details will be displayed here -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="downloadButton">Download PDF</button>
+                    <div class="form-group col-md-6">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Discount Section -->
+            
+            <div class="mb-4">
+                <h2>Discount Details</h2>
+                <div class="form-group">
+                    <label for="productID">Product:</label>
+                    <select class="form-control" id="productID" name="productID" required>
+                        <?php
+                        // Fetch product names from the database and populate dropdown
+                        $productResult = $con->query($productQuery);
+
+                        if ($productResult->num_rows > 0) {
+                            while ($product = $productResult->fetch_assoc()) {
+                                echo "<option value='" . $product["ProductID"] . "'>" . $product["Name"] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="discountPercentage">Discount Percentage:</label>
+                    <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" min="0" max="100" step="0.01" required>
+                </div>
+            </div>
+
+                      <!-- Select Cashier Section -->
+                      <div class="mb-4">
+                <h2>Select Cashier</h2>
+                <div class="form-group">
+                    <label for="cashier">Cashier:</label>
+                    <select class="form-control" id="cashier" name="cashier" required>
+                        <?php
+                        include 'connect.php'; // Include the database connection
+
+                        // Fetch cashier names from the database and populate dropdown
+                        $cashierQuery = "SELECT CashierID, Name FROM cashiers";
+                        $cashierResult = $con->query($cashierQuery);
+
+                        if ($cashierResult->num_rows > 0) {
+                            while ($cashier = $cashierResult->fetch_assoc()) {
+                                echo "<option value='" . $cashier["CashierID"] . "'>" . $cashier["Name"] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+      <!-- Update and Generate Buttons -->
+      <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-success" onclick="showBillDetailsPopup()">Generate</button>
+
+            <!-- Cancel and Download Buttons -->
+            <a href="bill.php" class="btn btn-secondary">Cancel</a>
+            <a href="download_bill.php" class="btn btn-info">Download PDF</a>
+        </form>
+    </div>
     </div>
 
+    <!-- Include Bootstrap JS (optional, for some interactive features) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        $(function() {
-            $("#generateBillButton").click(function() {
-                var cashierName = $("#cashierID option:selected").text();
-                var productName = $("#productID option:selected").text();
-                var quantity = $("#quantity").val();
-                var price = parseFloat($("#productID option:selected").data("price"));
-                var discountPercentage = parseFloat($("#productID option:selected").data("discount"));
-                
-                var totalAmount = price * quantity;
-                if (discountPercentage > 0) {
-                    var discountAmount = (totalAmount * discountPercentage) / 100;
-                    totalAmount -= discountAmount;
-                }
-                
-                var billDetailsHtml = "<p>Cashier: " + cashierName + "</p>" +
-                                      "<p>Product: " + productName + "</p>" +
-                                      "<p>Quantity: " + quantity + "</p>" +
-                                      "<p>Total Amount: " + totalAmount.toFixed(2) + "</p>";
-                $("#billModalBody").html(billDetailsHtml);
-                
-                $("#billModal").modal("show");
-            });
-            
-            $("#downloadButton").click(function() {
-                var doc = new jsPDF();
-                doc.text("Bill Details", 10, 10);
-                var cashierName = $("#cashierID option:selected").text();
-                var productName = $("#productID option:selected").text();
-                var quantity = $("#quantity").val();
-                var price = parseFloat($("#productID option:selected").data("price"));
-                var discountPercentage = parseFloat($("#productID option:selected").data("discount"));
-                
-                var totalAmount = price * quantity;
-                if (discountPercentage > 0) {
-                    var discountAmount = (totalAmount * discountPercentage) / 100;
-                    totalAmount -= discountAmount;
-                }
-                
-                doc.text("Cashier: " + cashierName, 10, 20);
-                doc.text("Product: " + productName, 10, 30);
-                doc.text("Quantity: " + quantity, 10, 40);
-                doc.text("Total Amount: " + totalAmount.toFixed(2), 10, 50);
-                doc.save("bill_details.pdf");
-            });
-        });
+        function showBillDetailsPopup() {
+            // Logic to show a popup with bill details
+            // You can use Bootstrap modal components
+        }
     </script>
-</body>
-</html>
 </body>
 </html>

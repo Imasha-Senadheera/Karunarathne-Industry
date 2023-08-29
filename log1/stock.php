@@ -4,13 +4,13 @@ include 'connect.php';
 $sql = "SELECT * FROM stock";
 $result = $con->query($sql);
 
-$currentTime = date("H:i");
-$allowedStartTime = strtotime("08:00");
-$allowedEndTime = strtotime("18:00");
+//$currentTime = date("H:i");
+//$allowedStartTime = strtotime("08:00");
+//$allowedEndTime = strtotime("18:00");
 
-if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $allowedEndTime) {
-    die("Access to this page is restricted outside of the allowed time range (8:00 AM - 6:00 PM).");
-}
+//if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $allowedEndTime) {
+//    die("Access to this page is restricted outside of the allowed time range (8:00 AM - 6:00 PM).");
+//}
 
 ?>
 
@@ -23,7 +23,7 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
+<div class="container mt-5">
         <h1 class="mb-4">Stock Details</h1>
         <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
         <table class="table table-bordered">
@@ -83,9 +83,6 @@ if ($result->num_rows > 0) {
 
 <div class="container mt-5">
         <h1 class="mb-4">Stock Management Generated Chart</h1>
-        <table class="table table-bordered">
-            <!-- ... your existing table ... -->
-        </table>
     </div>
 
     <div class="container mt-4">
