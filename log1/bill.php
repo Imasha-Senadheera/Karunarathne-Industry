@@ -54,6 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Bill</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container mt-5">
@@ -95,8 +98,79 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="quantity">Quantity:</label>
                 <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
             </div>
-            <button type="submit" class="btn btn-primary">Generate Bill</button>
+            <button type="button" class="btn btn-primary" id="generateBillButton">Generate Bill</button>
         </form>
+        
+        <div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="billModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="billModalLabel">Bill Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="billModalBody">
+                        <!-- Bill details will be displayed here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="downloadButton">Download PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+    <script>
+        $(function() {
+            $("#generateBillButton").click(function() {
+                var cashierName = $("#cashierID option:selected").text();
+                var productName = $("#productID option:selected").text();
+                var quantity = $("#quantity").val();
+                var price = parseFloat($("#productID option:selected").data("price"));
+                var discountPercentage = parseFloat($("#productID option:selected").data("discount"));
+                
+                var totalAmount = price * quantity;
+                if (discountPercentage > 0) {
+                    var discountAmount = (totalAmount * discountPercentage) / 100;
+                    totalAmount -= discountAmount;
+                }
+                
+                var billDetailsHtml = "<p>Cashier: " + cashierName + "</p>" +
+                                      "<p>Product: " + productName + "</p>" +
+                                      "<p>Quantity: " + quantity + "</p>" +
+                                      "<p>Total Amount: " + totalAmount.toFixed(2) + "</p>";
+                $("#billModalBody").html(billDetailsHtml);
+                
+                $("#billModal").modal("show");
+            });
+            
+            $("#downloadButton").click(function() {
+                var doc = new jsPDF();
+                doc.text("Bill Details", 10, 10);
+                var cashierName = $("#cashierID option:selected").text();
+                var productName = $("#productID option:selected").text();
+                var quantity = $("#quantity").val();
+                var price = parseFloat($("#productID option:selected").data("price"));
+                var discountPercentage = parseFloat($("#productID option:selected").data("discount"));
+                
+                var totalAmount = price * quantity;
+                if (discountPercentage > 0) {
+                    var discountAmount = (totalAmount * discountPercentage) / 100;
+                    totalAmount -= discountAmount;
+                }
+                
+                doc.text("Cashier: " + cashierName, 10, 20);
+                doc.text("Product: " + productName, 10, 30);
+                doc.text("Quantity: " + quantity, 10, 40);
+                doc.text("Total Amount: " + totalAmount.toFixed(2), 10, 50);
+                doc.save("bill_details.pdf");
+            });
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>
