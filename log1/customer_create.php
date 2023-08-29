@@ -15,7 +15,8 @@
                 
                 if ($stmt->execute()) {
                     // Successful insertion
-                    echo '<div class="alert alert-success">Customer added successfully!</div>';
+                    header("Location: customers.php"); // Redirect back to product.php
+                    exit();
                 } else {
                     // Error in insertion
                     echo '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';

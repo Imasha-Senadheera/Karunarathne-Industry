@@ -23,18 +23,18 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Stock Details</h1>
-        <a href="/log1/create.php" class="btn btn-success mb-3">Add New</a>
+        <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>StockID</th>
                     <th>ProductID</th>
-                    <th>GRNDate</th>
+                    <th>GRN</th>
                     <th>InvoiceDate</th>
                     <th>PurchaseOrderDate</th>
-                    <th>QuantityReceived</th>
-                    <th>QuantitySold</th>
-                    <th>QuantityRemaining</th>
+                    <th>Quty Received</th>
+                    <th>Quty Sold</th>
+                    <th>Qty Remaining</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -45,15 +45,15 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
                         echo "<tr>";
                         echo "<td>".$row["StockID"]."</td>";
                         echo "<td>".$row["ProductID"]."</td>";
-                        echo "<td>".$row["GRNDate"]."</td>";
+                        echo "<td>".$row["GRN"]."</td>";
                         echo "<td>".$row["InvoiceDate"]."</td>";
                         echo "<td>".$row["PurchaseOrderDate"]."</td>";
                         echo "<td>".$row["QuantityReceived"]."</td>";
                         echo "<td>".$row["QuantitySold"]."</td>";
                         echo "<td>".$row["QuantityRemaining"]."</td>";
                         echo "<td>
-                                <a href='/log1/edit.php".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='/log1/delete.php".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>
+                                <a href='stock_edit.php?id=".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='stock_delete.php?id=".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>
                               </td>";
                         echo "</tr>";
                     }
