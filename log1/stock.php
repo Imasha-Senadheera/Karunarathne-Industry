@@ -14,8 +14,6 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
 
 ?>
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +22,8 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Stock Management</h1>
+        <h1 class="mb-4">Stock Details</h1>
+        <a href="/log1/create.php" class="btn btn-success mb-3">Add New</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -53,8 +52,8 @@ if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $al
                         echo "<td>".$row["QuantitySold"]."</td>";
                         echo "<td>".$row["QuantityRemaining"]."</td>";
                         echo "<td>
-                                <a href='edit.php?id=".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='delete.php?id=".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>
+                                <a href='/log1/edit.php".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='/log1/delete.php".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>
                               </td>";
                         echo "</tr>";
                     }

@@ -13,7 +13,8 @@ $result = $con->query($sql);
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Product Management</h1>
+        <h1 class="mb-4">Product Details</h1>
+        <a href="/log1/create.php" class="btn btn-success mb-3">Add New</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -36,8 +37,8 @@ $result = $con->query($sql);
                         echo "<td>".$row["Price"]."</td>";
                         echo "<td>".$row["Quantity"]."</td>";
                         echo "<td>
-                                <a href='edit_product.php?id=".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='delete_product.php?id=".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>
+                                <a href='/log1/edit.php".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='/log1/delete.php".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>
                               </td>";
                         echo "</tr>";
                     }
