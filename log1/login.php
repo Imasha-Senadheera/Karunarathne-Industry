@@ -1,103 +1,98 @@
 <?php
-$login = 0;
-$invalid = 0;
+$invalid = false;
 
-$currentTime = date("H:i");
+// Set the desired time zone
+date_default_timezone_set("Asia/Colombo"); // Time zone in Sri Lanka (GMT+5:30)
+
+// Get the current time and date
+$currentTimestamp = time();
+$currentHour = date("H", $currentTimestamp);
+$currentMinute = date("i", $currentTimestamp);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include 'connect.php';
-    $username = $_POST['UserName'];
-    $password = $_POST['Password'];
-    $role = $_POST['Role'];
-    $lastLogTime = $_POST['LastLoginTime'];
-
-    $sql = "SELECT * FROM `login` WHERE UserName = '$username' AND Password = '$password'";
+    
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+    $sql = "SELECT * FROM `Cashiers` WHERE Username = '$username' AND Password = '$password'";
     $result = mysqli_query($con, $sql);
 
     if ($result) {
         $num = mysqli_num_rows($result);
         if ($num > 0) {
             $row = mysqli_fetch_assoc($result);
-            $lastLoginTime = strtotime($row['LastLoginTime']);
-            $allowedStartTime = strtotime("08:00");
-            $allowedEndTime = strtotime("18:00");
-
-            if ($lastLoginTime >= $allowedStartTime && $lastLoginTime <= $allowedEndTime) {
-                $login = 1;
+            
+            // Check if it's within allowed login hours (8am - 6pm)
+            if (($currentHour > 8 || ($currentHour == 8 && $currentMinute >= 0)) &&
+                $currentHour < 18) {
                 session_start();
-                $_SESSION['UserName'] = $row['UserName'];
-                $_SESSION['Role'] = $row['Role'];
-                $_SESSION['LastLoginTime'] = $row['LastLoginTime'];
-                header('location:stock.php');
+                $_SESSION['username'] = $row['Username'];
+                $_SESSION['role'] = $row['Role'];
+                $_SESSION['lastLoginTime'] = $row['LastLoginTime'];
+                header('Location: stock.php');
+                exit();
             } else {
-                $invalid = 2; // Set an additional error code for time restriction
+                // Outside allowed login hours
+                $invalid = true;
             }
         } else {
-            $invalid = 1;
-        }    
+            $invalid = true;
+        }
+    } else {
+        // Debugging: Output the MySQL error if there is one
+        echo "MySQL Error: " . mysqli_error($con);
     }
 }
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <style>
+        /* Center the form */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Adjust the height as needed */
+        }
+        
+        /* Add border around the form */
+        .login-form {
+            border: 5px solid #ccc;
+            padding: 150px;
+            border-radius: 50px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Login here!</h1>
-        <?php if ($invalid === 2): ?>
-            <div class="alert alert-danger" role="alert">
-                You cannot log in outside of the allowed time range (8:00 AM - 6:00 PM).
-            </div>
-        <?php endif; ?>
-        <form action="login.php" method="post">
-            <div class="mb-3">
-                <label for="userName" class="form-label">Name</label>
-                <input type="text" class="form-control" placeholder="Enter your username" name="UserName">
-            </div>
-
-            <div class="mb-3">
-                <label for="Role" class="form-label">Role</label>
-                <input type="text" class="form-control" placeholder="Enter your role" name="Role">
-            </div>
-
-            <div class="mb-3">
-                <label for="LastLoginTime" class="form-label">Last Login Time</label>
-                <input type="text" class="form-control" placeholder="Enter your Last Login Time" name="LastLoginTime">
-            </div>
-
-            <div class="mb-3">
-                <label for="userPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" placeholder="Enter your password" name="Password">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+    <div class="login-container">
+        <div class="login-form">
+            <h1 class="mb-4">Login here!</h1>
+            <?php if ($invalid): ?>
+                <div class="alert alert-danger" role="alert">
+                    Invalid username or password, or login outside allowed hours.
+                </div>
+            <?php endif; ?>
+            <form action="login.php" method="post">
+                <div class="mb-5">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" placeholder="Enter your username" name="username" required>
+                </div>
+                <div class="mb-5">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
     </div>
-
-    <?php if ($invalid === 1): ?>
-        <div class="container mt-3">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Ohh NO Sorry!</strong> Invalid data!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($login): ?>
-        <div class="container mt-3">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Success!</strong> You are successfully logged in!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
