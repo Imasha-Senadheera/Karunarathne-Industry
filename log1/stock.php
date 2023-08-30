@@ -1,19 +1,14 @@
 <?php
 include 'connect.php';
 
-$sql = "SELECT * FROM stock";
+$searchGRN = isset($_GET['search_grn']) ? $_GET['search_grn'] : '';
+$searchInvoiceDate = isset($_GET['search_invoice_date']) ? $_GET['search_invoice_date'] : '';
+$searchPurchaseOrderDate = isset($_GET['search_purchase_order_date']) ? $_GET['search_purchase_order_date'] : '';
+
+// Build the SQL query with filters
+$sql = "SELECT * FROM stock WHERE GRN LIKE '%$searchGRN%' AND InvoiceDate LIKE '%$searchInvoiceDate%' AND PurchaseOrderDate LIKE '%$searchPurchaseOrderDate%'";
 $result = $con->query($sql);
-
-//$currentTime = date("H:i");
-//$allowedStartTime = strtotime("08:00");
-//$allowedEndTime = strtotime("18:00");
-
-//if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $allowedEndTime) {
-//    die("Access to this page is restricted outside of the allowed time range (8:00 AM - 6:00 PM).");
-//}
-
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -24,27 +19,48 @@ $result = $con->query($sql);
 </head>
 <body>
 <div class="container mt-5">
-        <h1 class="mb-4">Stock Details</h1>
-        <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
+    <h1 class="mb-5">Stock Details</h1>
+    <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
+   
+<!-- Add search and filter form -->
+<form class="mb-5" method="GET">
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Search by GRN" name="search_grn">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Search by Invoice Date" name="search_invoice_date">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Search by Purchase Order Date" name="search_purchase_order_date">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="stock.php" class="btn btn-secondary ml-2">All</a>
+        </div>
+    </div>
+</form>
+
+
         <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>StockID</th>
-                    <th>ProductID</th>
-                    <th>GRN</th>
-                    <th>InvoiceDate</th>
-                    <th>PurchaseOrderDate</th>
-                    <th>Quty Received</th>
-                    <th>Quty Sold</th>
-                    <th>Qty Remaining</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+        <thead>
+            <tr>
+                <th>StockID</th>
+                <th>ProductID</th>
+                <th>GRN</th>
+                <th>InvoiceDate</th>
+                <th>PurchaseOrderDate</th>
+                <th>Quty Received</th>
+                <th>Quty Sold</th>
+                <th>Qty Remaining</th>
+                <th>Action</th>
+            </tr>
+        </thead>
             <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
+            <?php
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo "<tr>";
                         echo "<td>".$row["StockID"]."</td>";
                         echo "<td>".$row["ProductID"]."</td>";
                         echo "<td>".$row["GRN"]."</td>";
@@ -67,51 +83,7 @@ $result = $con->query($sql);
         </table>
     </div>
 
-    <?php
 
-$sql = "SELECT * FROM stock";
-$result = $con->query($sql);
 
-$chartData = [['StockID', 'QuantityReceived', 'QuantityRemaining']];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $chartData[] = [intval($row["StockID"]), intval($row["QuantityReceived"]), intval($row["QuantityRemaining"])];
-    }
-}
-?>
-
-<div class="container mt-5">
-        <h1 class="mb-4">Stock Management Generated Chart</h1>
-    </div>
-
-    <div class="container mt-4">
-        <h2>Quantity Chart</h2>
-        <div id="chart_div"></div>
-    </div>
-
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable(<?php echo json_encode($chartData); ?>);
-
-            var options = {
-                title: 'Quantity Received and Remaining',
-                chartArea: {width: '50%'},
-                hAxis: {
-                    title: 'Quantity',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Stock ID'
-                }
-            };
-
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
-        }
-    </script>
 </body>
 </html>
