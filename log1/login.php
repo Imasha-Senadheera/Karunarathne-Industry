@@ -1,43 +1,63 @@
 <?php
-$invalid = false;
-
 date_default_timezone_set("Asia/Colombo");
 
-$currentTimestamp = time();
-$currentHour = date("H", $currentTimestamp);
-$currentMinute = date("i", $currentTimestamp);
+$invalid = false;
+
+include 'connect.php';  // Include the database connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include 'connect.php';
-    
     $username = $_POST['username'];
     $password = $_POST['password'];
-    
-    $sql = "SELECT * FROM `Cashiers` WHERE Username = '$username' AND Password = '$password'";
-    $result = mysqli_query($con, $sql);
+    $role = $_POST['role'];
 
-    if ($result) {
-        $num = mysqli_num_rows($result);
-        if ($num > 0) {
-            $row = mysqli_fetch_assoc($result);
-            
-            if (($currentHour > 8 || ($currentHour == 8 && $currentMinute >= 0)) &&
-                $currentHour < 18) {
-                session_start();
-                $_SESSION['cashier_id'] = $row['CashierID'];
+    // Check if the user is a manager and restrict login time
+    if ($role == 'Manager') {
+        $isAllowed = true;
+    } else {
+        $currentHour = date("H");
+        if ($currentHour >= 8 && $currentHour < 18) {
+            $isAllowed = true;
+        } else {
+            $isAllowed = false;
+            $invalid = true;
+        }
+    }
+
+    if ($isAllowed) {
+        // Authenticate user using MySQLi
+        $query = "SELECT UserID, Username, Role FROM users WHERE Username = ? AND Password = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if ($user) {
+            session_start();
+            $_SESSION['user_id'] = $user['UserID'];
+            $_SESSION['username'] = $user['Username'];
+            $_SESSION['role'] = $user['Role'];
+
+            // Insert login details into the database
+            $insertQuery = "INSERT INTO login (UserID, Username, Role, LoginTime) VALUES (?, ?, ?, NOW())";
+            $insertStmt = $con->prepare($insertQuery);
+            $insertStmt->bind_param("sss", $user['UserID'], $user['Username'], $user['Role']);
+            $insertStmt->execute();
+
+            if ($user['Role'] == 'Cashier') {
                 header('Location: cashier_dashboard.php');
                 exit();
-            } else {
-                $invalid = true;
+            } elseif ($user['Role'] == 'Manager') {
+                header('Location: manager_dashboard.php');
+                exit();
             }
         } else {
             $invalid = true;
         }
-    } else {
-        echo "MySQL Error: " . mysqli_error($con);
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -78,6 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="mb-5">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
+                </div>
+                <div class="mb-5">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select" name="role" required>
+                        <option value="Cashier">Cashier</option>
+                        <option value="Manager">Manager</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
