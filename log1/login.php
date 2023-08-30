@@ -1,10 +1,8 @@
 <?php
 $invalid = false;
 
-// Set the desired time zone
-date_default_timezone_set("Asia/Colombo"); // Time zone in Sri Lanka (GMT+5:30)
+date_default_timezone_set("Asia/Colombo");
 
-// Get the current time and date
 $currentTimestamp = time();
 $currentHour = date("H", $currentTimestamp);
 $currentMinute = date("i", $currentTimestamp);
@@ -23,24 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($num > 0) {
             $row = mysqli_fetch_assoc($result);
             
-            // Check if it's within allowed login hours (8am - 6pm)
             if (($currentHour > 8 || ($currentHour == 8 && $currentMinute >= 0)) &&
                 $currentHour < 18) {
                 session_start();
-                $_SESSION['username'] = $row['Username'];
-                $_SESSION['role'] = $row['Role'];
-                $_SESSION['lastLoginTime'] = $row['LastLoginTime'];
-                header('Location: stock.php');
+                $_SESSION['cashier_id'] = $row['CashierID'];
+                header('Location: cashier_dashboard.php');
                 exit();
             } else {
-                // Outside allowed login hours
                 $invalid = true;
             }
         } else {
             $invalid = true;
         }
     } else {
-        // Debugging: Output the MySQL error if there is one
         echo "MySQL Error: " . mysqli_error($con);
     }
 }
@@ -54,15 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Login Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <style>
-        /* Center the form */
         .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Adjust the height as needed */
+            height: 100vh;
         }
         
-        /* Add border around the form */
         .login-form {
             border: 5px solid #ccc;
             padding: 150px;
@@ -95,4 +86,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

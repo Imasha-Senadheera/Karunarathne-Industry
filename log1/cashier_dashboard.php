@@ -1,19 +1,105 @@
-<?php
-session_start();
-if (!isset($_SESSION['cashier_id'])) {
-    header('Location: login.php');
-    exit();
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cashier Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Set a background color if needed */
+            font-family: 'Arial', sans-serif; /* Set a custom font style */
+        }
 
-include 'connect.php';
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
 
-$cashierID = $_SESSION['cashier_id'];
+        .company-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-$sql = "SELECT cashiers.CashierID, cashiers.Name, cashiers.Username, cashiers.Password, cashiers.FlowID, COUNT(sales.SaleID) AS TotalSales
-        FROM cashiers
-        LEFT JOIN sales ON cashiers.CashierID = sales.CashierID
-        WHERE cashiers.CashierID = $cashierID
-        GROUP BY cashiers.CashierID";
-$result = $con->query($sql);
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 40px;
+        }
 
-// ... Display the rest of your HTML and table as before
+        .dashboard-cards {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+
+        .dashboard-card {
+            text-align: center;
+            padding: 20px;
+            margin: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-icon {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="company-name">Karunarathne Industry</div>
+        <div class="dashboard-title">Cashier Dashboard</div>
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <i class="fas fa-users dashboard-icon"></i>
+                <h3>Customers</h3>
+                <a href="customers.php" class="dashboard-button">View Customers</a>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-box-open dashboard-icon"></i>
+                <h3>Products</h3>
+                <a href="product.php" class="dashboard-button">View Products</a>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-boxes dashboard-icon"></i>
+                <h3>Stock</h3>
+                <a href="stock.php" class="dashboard-button">View Stock</a>
+            </div>
+        </div>
+        <a href="login.php" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>

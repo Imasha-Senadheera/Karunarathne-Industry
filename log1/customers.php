@@ -3,15 +3,6 @@ include 'connect.php';
 
 $sql = "SELECT * FROM customers";
 $result = $con->query($sql);
-
-$currentTime = date("H:i");
-$allowedStartTime = strtotime("08:00");
-$allowedEndTime = strtotime("18:00");
-
-if (strtotime($currentTime) < $allowedStartTime || strtotime($currentTime) > $allowedEndTime) {
-    die("Access to this page is restricted outside of the allowed time range (8:00 AM - 6:00 PM).");
-}
-
 ?>
 
 <!DOCTYPE html>
