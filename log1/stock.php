@@ -1,6 +1,13 @@
 <?php
 include 'connect.php';
 
+// Check if the user is logged in and has the necessary role
+session_start();
+if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Manager' && $_SESSION['role'] != 'Cashier')) {
+    header('Location: login.php'); // Redirect unauthorized users to the login page
+    exit();
+}
+
 $searchGRN = isset($_GET['search_grn']) ? $_GET['search_grn'] : '';
 $searchInvoiceDate = isset($_GET['search_invoice_date']) ? $_GET['search_invoice_date'] : '';
 $searchPurchaseOrderDate = isset($_GET['search_purchase_order_date']) ? $_GET['search_purchase_order_date'] : '';
@@ -20,7 +27,9 @@ $result = $con->query($sql);
 <body>
 <div class="container mt-5">
     <h1 class="mb-5">Stock Details</h1>
-    <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
+    <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
+        <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
+    <?php endif; ?>
    
 <!-- Add search and filter form -->
 <form class="mb-5" method="GET">
@@ -61,29 +70,36 @@ $result = $con->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                        echo "<td>".$row["StockID"]."</td>";
-                        echo "<td>".$row["ProductID"]."</td>";
-                        echo "<td>".$row["GRN"]."</td>";
-                        echo "<td>".$row["InvoiceDate"]."</td>";
-                        echo "<td>".$row["PurchaseOrderDate"]."</td>";
-                        echo "<td>".$row["QuantityReceived"]."</td>";
-                        echo "<td>".$row["QuantitySold"]."</td>";
-                        echo "<td>".$row["QuantityRemaining"]."</td>";
-                        echo "<td>
-                                <a href='stock_edit.php?id=".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='stock_delete.php?id=".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>
-                              </td>";
-                        echo "</tr>";
+                    echo "<td>".$row["StockID"]."</td>";
+                    echo "<td>".$row["ProductID"]."</td>";
+                    echo "<td>".$row["GRN"]."</td>";
+                    echo "<td>".$row["InvoiceDate"]."</td>";
+                    echo "<td>".$row["PurchaseOrderDate"]."</td>";
+                    echo "<td>".$row["QuantityReceived"]."</td>";
+                    echo "<td>".$row["QuantitySold"]."</td>";
+                    echo "<td>".$row["QuantityRemaining"]."</td>";
+                    echo "<td>";
+                    
+                    // Cashiers can only edit
+                    if ($_SESSION['role'] == 'Cashier') {
+                        echo "<a href='stock_edit.php?id=".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>";
                     }
-                } else {
-                    echo "<tr><td colspan='9'>No records found</td></tr>";
+                    
+                    // Managers can edit and delete
+                    if ($_SESSION['role'] == 'Manager') {
+                        echo "<a href='stock_edit.php?id=".$row["StockID"]."' class='btn btn-primary btn-sm'>Edit</a>";
+                        echo "<a href='stock_delete.php?id=".$row["StockID"]."' class='btn btn-danger btn-sm'>Delete</a>";
+                    }
+                    
+                    echo "</td>";
+                    echo "</tr>";
                 }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
-
-
+            } else {
+                echo "<tr><td colspan='9'>No records found</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

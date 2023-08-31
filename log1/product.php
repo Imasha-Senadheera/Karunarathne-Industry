@@ -1,6 +1,13 @@
 <?php
 include 'connect.php';
 
+// Check if the user is logged in and has the necessary role
+session_start();
+if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Manager' && $_SESSION['role'] != 'Cashier')) {
+    header('Location: login.php'); // Redirect unauthorized users to the login page
+    exit();
+}
+
 $sql = "SELECT * FROM products";
 $result = $con->query($sql);
 ?>
@@ -14,7 +21,9 @@ $result = $con->query($sql);
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Product Details</h1>
-        <a href="product_create.php" class="btn btn-success mb-3">Add New</a>
+        <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
+            <a href="product_create.php" class="btn btn-success mb-3">Add New</a>
+        <?php endif; ?>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -36,10 +45,20 @@ $result = $con->query($sql);
                         echo "<td>".$row["Description"]."</td>";
                         echo "<td>".$row["Price"]."</td>";
                         echo "<td>".$row["Quantity"]."</td>";
-                        echo "<td>
-                                <a href='product_edit.php?id=".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='product_delete.php?id=".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>
-                              </td>";
+                        echo "<td>";
+                        
+                        // Cashiers can only edit
+                        if ($_SESSION['role'] == 'Cashier') {
+                            echo "<a href='product_edit.php?id=".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>";
+                        }
+                        
+                        // Managers can edit and delete
+                        if ($_SESSION['role'] == 'Manager') {
+                            echo "<a href='product_edit.php?id=".$row["ProductID"]."' class='btn btn-primary btn-sm'>Edit</a>";
+                            echo "<a href='product_delete.php?id=".$row["ProductID"]."' class='btn btn-danger btn-sm'>Delete</a>";
+                        }
+                        
+                        echo "</td>";
                         echo "</tr>";
                     }
                 } else {

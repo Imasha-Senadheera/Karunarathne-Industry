@@ -37,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id'] = $user['UserID'];
             $_SESSION['username'] = $user['Username'];
             $_SESSION['role'] = $user['Role'];
-
+        
             // Insert login details into the database
             $insertQuery = "INSERT INTO login (UserID, Username, Role, LoginTime) VALUES (?, ?, ?, NOW())";
             $insertStmt = $con->prepare($insertQuery);
             $insertStmt->bind_param("sss", $user['UserID'], $user['Username'], $user['Role']);
             $insertStmt->execute();
-
+        
             if ($user['Role'] == 'Cashier') {
                 header('Location: cashier_dashboard.php');
                 exit();
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             $invalid = true;
-        }
+        }        
     }
 }
 ?>
