@@ -111,7 +111,7 @@
             <div class="dashboard-card">
                 <i class="fas fa-chart-bar dashboard-icon"></i>
                 <h3>Reports</h3>
-                <a href="report.php" class="dashboard-button">Generate Reports</a>
+                <a href="reports.php" class="dashboard-button">Generate Reports</a>
             </div>
             <div class="dashboard-card">
                 <i class="fas fa-star dashboard-icon"></i>
