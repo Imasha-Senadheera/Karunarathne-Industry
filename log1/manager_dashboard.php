@@ -116,7 +116,7 @@
             <div class="dashboard-card">
                 <i class="fas fa-star dashboard-icon"></i>
                 <h3>Loyal Customers</h3>
-                <a href="loyal_customers.php" class="dashboard-button">View Loyal Customers</a>
+                <a href="loyalCus.php" class="dashboard-button">View Loyal Customers</a>
             </div>
         </div>
         <a href="login.php" class="logout-button">Logout</a>
