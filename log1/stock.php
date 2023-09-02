@@ -20,6 +20,9 @@ $result = $con->query($sql);
 if ($result === false) {
     die("Database query error: " . $con->error);
 }
+
+// Define the dashboard URL based on the user's role
+$dashboardURL = ($_SESSION['role'] == 'Cashier') ? 'cashier_dashboard.php' : 'manager_dashboard.php';
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +37,7 @@ if ($result === false) {
     <h1 class="mb-5">Stock Details</h1>
     <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
         <a href="stock_create.php" class="btn btn-success mb-3">Add New</a>
-        <a href="cashier_dashboard.php" class="btn btn-warning mb-3 ml-2">Go to Dashboard</a>
+        <a href="<?php echo $dashboardURL; ?>" class="btn btn-warning mb-3 ml-2">Go to Dashboard</a>
     <?php endif; ?>
    
     <!-- Add search and filter form -->

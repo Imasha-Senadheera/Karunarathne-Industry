@@ -1,6 +1,12 @@
 <?php
 include 'connect.php';
 
+session_start();
+if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Manager' && $_SESSION['role'] != 'Cashier')) {
+    header('Location: login.php'); // Redirect unauthorized users to the login page
+    exit();
+}
+
 $searchUserID = isset($_GET['search_userid']) ? $_GET['search_userid'] : '';
 $searchUsername = isset($_GET['search_username']) ? $_GET['search_username'] : '';
 $searchFlowID = isset($_GET['search_flow_id']) ? $_GET['search_flow_id'] : '';
@@ -8,6 +14,9 @@ $searchFlowID = isset($_GET['search_flow_id']) ? $_GET['search_flow_id'] : '';
 // Initialize variables
 $sortColumn = isset($_GET['sort_column']) ? $_GET['sort_column'] : 'UserID';
 $sortOrder = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
+
+// Define the dashboard URL based on the user's role
+$dashboardURL = ($_SESSION['role'] == 'Cashier') ? 'cashier_dashboard.php' : 'manager_dashboard.php';
 
 // Build the SQL query with sorting and filtering
 $sql = "SELECT cashiers.UserID, cashiers.Name, cashiers.FlowID
@@ -50,7 +59,7 @@ if ($result === false) {
             
             <button type="submit" class="btn btn-primary">Search</button>
             <a href="cashier.php" class="btn btn-secondary">All</a>
-            <a href="manager_dashboard.php" class="btn btn-warning">Go to Dashboard</a> <!-- Add this line -->
+            <a href="<?php echo $dashboardURL; ?>" class="btn btn-warning">Go to Dashboard</a>
         </form>
         
         <table class="table table-bordered">

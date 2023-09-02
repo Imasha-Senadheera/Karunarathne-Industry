@@ -10,6 +10,9 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Manager' && $_SESSION['r
 
 $sql = "SELECT * FROM customers";
 $result = $con->query($sql);
+
+// Define the dashboard URL based on the user's role
+$dashboardURL = ($_SESSION['role'] == 'Cashier') ? 'cashier_dashboard.php' : 'manager_dashboard.php';
 ?>
 
 <!DOCTYPE html>
@@ -24,8 +27,8 @@ $result = $con->query($sql);
         <div class="mb-3">
             <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
                 <a href="customer_create.php" class="btn btn-success mr-2">Add New</a>
-                <!-- Add the "Go to the Dashboard" button with grey color -->
-                <a href="cashier_dashboard.php" class="btn btn-warning">Go to the Dashboard</a>
+                <!-- Add the "Go to Dashboard" button with grey color -->
+                <a href="<?php echo $dashboardURL; ?>" class="btn btn-warning">Go to the Dashboard</a>
             <?php endif; ?>
         </div>
         <table class="table table-bordered">

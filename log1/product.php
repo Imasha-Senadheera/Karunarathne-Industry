@@ -1,15 +1,31 @@
 <?php
 include 'connect.php';
 
-// Check if the user is logged in and has the necessary role
 session_start();
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Manager' && $_SESSION['role'] != 'Cashier')) {
     header('Location: login.php'); // Redirect unauthorized users to the login page
     exit();
 }
 
-$sql = "SELECT * FROM products";
+$searchProductName = isset($_GET['search_product_name']) ? $_GET['search_product_name'] : '';
+
+// Initialize variables
+$sortColumn = isset($_GET['sort_column']) ? $_GET['sort_column'] : 'ProductID';
+$sortOrder = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
+
+// Define the dashboard URL based on the user's role
+$dashboardURL = ($_SESSION['role'] == 'Cashier') ? 'cashier_dashboard.php' : 'manager_dashboard.php';
+
+// Build the SQL query with sorting and filtering
+$sql = "SELECT products.ProductID, products.Name, products.Description, products.Price, products.Quantity
+        FROM products
+        WHERE products.Name LIKE '%$searchProductName%'
+        ORDER BY $sortColumn $sortOrder";
 $result = $con->query($sql);
+
+if ($result === false) {
+    die("Error in SQL query: " . $con->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,13 +40,19 @@ $result = $con->query($sql);
         <div class="mb-3">
             <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
                 <a href="product_create.php" class="btn btn-success mr-2">Add New</a>
-                <a href="cashier_dashboard.php" class="btn btn-warning">Go to Dashboard</a> <!-- Add the "Go to Dashboard" button with grey color -->
+                <a href="<?php echo $dashboardURL; ?>" class="btn btn-warning">Go to Dashboard</a>
             <?php endif; ?>
         </div>
+        <form class="mb-5" method="GET">
+            <label for="search_product_name">Search by Product Name:</label>
+            <input type="text" name="search_product_name" value="<?php echo $searchProductName; ?>">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="product.php" class="btn btn-secondary">All</a>
+        </form>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ProductID</th>
+                    <th>Product ID</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Price</th>
