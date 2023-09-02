@@ -32,42 +32,41 @@ Password = " "
 * Technologies = PHP/HTML/Boostrap/JS </br>
 
 #### Login page 
-<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/8ad46778-d2e6-4f5d-a43f-bf85153fffe7" >
+<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/b6189ab5-d632-4b47-bf16-7f18c6defadc" >
 
 >Here, If the login user is a Cashier, the user will be redirected to the Cashier dashboard. If the login user is a Manager, the user will be redirected to the Manager dashboard. 
 
 </br></br>
 #### Cashier Dashboard 
-<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/7edcd504-349d-46b6-9d22-82c440935091" >
+<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/651a953d-bad4-49c4-b367-11a1a17ede38" >
+</br></br>
 
-* Customers </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/3fab657d-417a-4043-ad38-3fc4bccaaaab" >
-* Product </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/2b40d10e-f278-4cd4-bd35-6508722ab2a2" >
-* Stock </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/5a0c2176-eeea-4303-a72e-c87356644ed2" >
+* Customers </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/d5b39e31-4223-4dfb-af70-9a2938f4f55d" >
+* Product </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/ec88f34a-5dd7-4915-9c6f-1a3627c91784" >
+* Stock </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/f97fce80-b238-401d-9077-ea7c7194ba42" >
 
 Here, the Cashier has the access to edit and add new customers, products, and stock. Only Manage has access to delete. 
 
 </br></br>
 
 #### Manager Dashboard 
-<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/7edcd504-349d-46b6-9d22-82c440935091" >
+<img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/b665ffca-fdb1-499e-bdba-c1dd2d5147e6" >
+</br></br>
 
+* Customers </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/286aa209-3d31-43a0-9377-18b758f956a7" >
+* Product </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/21c554fd-8dcc-4eba-bb96-d3d41b23eb21" >
+* Stock </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/4909c585-821c-46ff-a812-1a90d18cb843" >
+* Sales </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/0686ca81-dc68-4720-b4cf-3b902469f5e8" >
+* Cashiers </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/616dbc02-53a1-4cef-8926-c6c211cae3c2" >
+* Reports </br></br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/fca8e5b4-88d8-4332-9119-9570ebc749d2" >
 
-
-
-* Customers </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/89f01f7f-738e-4e84-bd3f-30866dc8dd52" >
-* Product </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/91252712-a601-4e3c-98c6-79200a9258a2" >
-* Stock </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/55cefe0a-2d8c-4f5d-9977-cf222207cc2d" >
-* Sales </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/da59490c-a788-4353-8265-29603d359f26" >
-* Cashiers </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/5f3d71d5-34f0-4df1-a286-542be2133fd0" >
-* Reports </br>
-  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/6e6c1ff4-de77-415b-951d-b7a161f4c204" >
-
-Here, the Manager has all access to edit, delete and add new customers, products, and stock.
+Here, the Manager has all access to edit, delete, and add new customers, products, and stock.
