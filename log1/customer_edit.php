@@ -1,16 +1,18 @@
 <?php
 include 'connect.php'; // Include the database connection
 
+// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $customerID = $_POST["customerID"];
     $name = $_POST["name"];
     $email = $_POST["email"];
     $phone = $_POST["phone"];
+    $loyaltyStatus = $_POST["loyaltyStatus"]; // Get the updated LoyaltyStatus
     
     // Prepare and execute the SQL query to update the customer data
-    $updateQuery = "UPDATE customers SET Name = ?, Email = ?, Phone = ? WHERE CustomerID = ?";
+    $updateQuery = "UPDATE customers SET Name = ?, Email = ?, Phone = ?, LoyaltyStatus = ? WHERE CustomerID = ?";
     $stmt = $con->prepare($updateQuery);
-    $stmt->bind_param("ssss", $name, $email, $phone, $customerID);
+    $stmt->bind_param("sssss", $name, $email, $phone, $loyaltyStatus, $customerID);
     
     if ($stmt->execute()) {
         // Successful update
@@ -72,6 +74,10 @@ $con->close(); // Close the database connection
             <div class="form-group">
                 <label for="phone">Phone:</label>
                 <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $customer['Phone']; ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="loyaltyStatus">Loyalty Status:</label>
+                <input type="text" class="form-control" id="loyaltyStatus" name="loyaltyStatus" value="<?php echo $customer['LoyaltyStatus']; ?>" required>
             </div>
             <button type="submit" class="btn btn-primary">Update Customer</button>
             <a href="customers.php" class="btn btn-danger">Cancel</a>

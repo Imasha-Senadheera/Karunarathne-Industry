@@ -21,9 +21,12 @@ $result = $con->query($sql);
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Product Details</h1>
-        <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
-            <a href="product_create.php" class="btn btn-success mb-3">Add New</a>
-        <?php endif; ?>
+        <div class="mb-3">
+            <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
+                <a href="product_create.php" class="btn btn-success mr-2">Add New</a>
+                <a href="cashier_dashboard.php" class="btn btn-warning">Go to Dashboard</a> <!-- Add the "Go to Dashboard" button with grey color -->
+            <?php endif; ?>
+        </div>
         <table class="table table-bordered">
             <thead>
                 <tr>

@@ -21,9 +21,13 @@ $result = $con->query($sql);
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Customer Details</h1>
-        <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
-            <a href="customer_create.php" class="btn btn-success mb-3">Add New</a>
-        <?php endif; ?>
+        <div class="mb-3">
+            <?php if ($_SESSION['role'] == 'Manager' || $_SESSION['role'] == 'Cashier'): ?>
+                <a href="customer_create.php" class="btn btn-success mr-2">Add New</a>
+                <!-- Add the "Go to the Dashboard" button with grey color -->
+                <a href="cashier_dashboard.php" class="btn btn-warning">Go to the Dashboard</a>
+            <?php endif; ?>
+        </div>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -31,6 +35,7 @@ $result = $con->query($sql);
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>LoyaltyStatus</th> 
                     <th>Action</th>
                 </tr>
             </thead>
@@ -43,6 +48,7 @@ $result = $con->query($sql);
                         echo "<td>".$row["Name"]."</td>";
                         echo "<td>".$row["Email"]."</td>";
                         echo "<td>".$row["Phone"]."</td>";
+                        echo "<td>".$row["LoyaltyStatus"]."</td>"; 
                         echo "<td>";
                         echo "<a href='customer_edit.php?id=".$row["CustomerID"]."' class='btn btn-primary btn-sm'>Edit</a>";
                         if ($_SESSION['role'] == 'Manager') {
@@ -52,7 +58,7 @@ $result = $con->query($sql);
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No records found</td></tr>";
+                    echo "<tr><td colspan='6'>No records found</td></tr>"; // Colspan adjusted for the new column
                 }
                 ?>
             </tbody>

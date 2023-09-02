@@ -70,7 +70,7 @@
             margin-top: 20px;
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 5px; 
             background-color: #28a745;
             color: white;
             font-size: 1rem;

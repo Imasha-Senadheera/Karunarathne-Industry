@@ -7,9 +7,7 @@ if (isset($_GET['date'])) {
     $dateFilter = "WHERE DATE(sales.SaleDate) = '$selectedDate'";
 }
 
-$sql = "SELECT sales.*, products.Price, discounts.DiscountPercentage FROM sales
-        JOIN products ON sales.ProductID = products.ProductID
-        LEFT JOIN discounts ON sales.ProductID = discounts.ProductID
+$sql = "SELECT sales.* FROM sales
         $dateFilter";
 $result = $con->query($sql);
 ?>
@@ -39,34 +37,41 @@ $result = $con->query($sql);
             <thead>
                 <tr>
                     <th>SaleID</th>
-                    <th>CashierID</th>
+                    <th>UserID</th>
                     <th>ProductID</th>
+                    <th>StockID</th>
+                    <th>CustomerID</th>
                     <th>SaleDate</th>
-                    <th>Quantity</th>
+                    <th>SaleTime</th>
+                    <th>QuantitySold</th>
                     <th>TotalAmount</th>
-                    <th>Discount (%)</th> <!-- New column -->
                 </tr>
             </thead>
             <tbody>
                 <?php
-                if ($result->num_rows > 0) {
+                if ($result) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>".$row["SaleID"]."</td>";
-                        echo "<td>".$row["CashierID"]."</td>";
+                        echo "<td>".$row["UserID"]."</td>";
                         echo "<td>".$row["ProductID"]."</td>";
+                        echo "<td>".$row["StockID"]."</td>";
+                        echo "<td>".$row["CustomerID"]."</td>";
                         echo "<td>".$row["SaleDate"]."</td>";
-                        echo "<td>".$row["Quantity"]."</td>";
+                        echo "<td>".$row["SaleTime"]."</td>";
+                        echo "<td>".$row["QuantitySold"]."</td>";
                         echo "<td>".$row["TotalAmount"]."</td>";
-                        echo "<td>".$row["DiscountPercentage"]."</td>"; // Display discount percentage
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7'>No records found</td></tr>";
+                    echo "<tr><td colspan='9'>No records found</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
+
+        <!-- Go to Dashboard Button -->
+        <a href="manager_dashboard.php" class="btn btn-warning">Go to Dashboard</a>
     </div>
 
     <script>
@@ -85,4 +90,3 @@ $result = $con->query($sql);
     </script>
 </body>
 </html>
-

@@ -1,33 +1,33 @@
 <?php
-            include 'connect.php'; // Include the database connection
-            
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $customerID = $_POST["customerID"];
-                $name = $_POST["name"];
-                $email = $_POST["email"];
-                $phone = $_POST["phone"];
-                
-                
-                // Prepare and execute the SQL query to insert the new customer data
-                $insertQuery = "INSERT INTO customers (CustomerID, Name, Email, Phone) VALUES (?, ?, ?, ?)";
-                $stmt = $con->prepare($insertQuery);
-                $stmt->bind_param("ssss", $customerID, $name, $email, $phone);
-                
-                if ($stmt->execute()) {
-                    // Successful insertion
-                    header("Location: customers.php"); // Redirect back to product.php
-                    exit();
-                } else {
-                    // Error in insertion
-                    echo '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';
-                }
-                
-                $stmt->close();
-            }
-            
-            $con->close(); // Close the database connection
-            ?>
-            
+include 'connect.php'; // Include the database connection
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $customerID = $_POST["customerID"];
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $loyaltyStatus = $_POST["loyaltyStatus"]; // Add LoyaltyStatus
+    
+    // Prepare and execute the SQL query to insert the new customer data
+    $insertQuery = "INSERT INTO customers (CustomerID, Name, Email, Phone, LoyaltyStatus) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $con->prepare($insertQuery);
+    $stmt->bind_param("sssss", $customerID, $name, $email, $phone, $loyaltyStatus); // Adjust the bind_param line
+    
+    if ($stmt->execute()) {
+        // Successful insertion
+        header("Location: customers.php"); // Redirect back to product.php
+        exit();
+    } else {
+        // Error in insertion
+        echo '<div class="alert alert-danger">Error: ' . $stmt->error . '</div>';
+    }
+    
+    $stmt->close();
+}
+
+$con->close(); // Close the database connection
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,6 +54,10 @@
             <div class="form-group">
                 <label for="phone">Phone:</label>
                 <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="loyaltyStatus">Loyalty Status:</label>
+                <input type="text" class="form-control" id="loyaltyStatus" name="loyaltyStatus" required>
             </div>
             <button type="submit" class="btn btn-primary">Add Customer</button>
             <a href="customers.php" class="btn btn-danger">Cancel</a>
