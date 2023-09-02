@@ -1,14 +1,14 @@
 # Karunarathne-Industry
 
->Background </br>
+#### Background </br>
 
 As part of the expansion plans of Karunarathne Industries, a new branch will be opened in the Colombo area. </br>
-Unfortunately , the power tools they sell are located in separate buildings. In each building, there are three main flows. The same identical products are sold in two buildings. Each flow is staffed by a single cashier . Therefore , there are six cashiers in these two buildings . With this approach , customers have easy access to assistance and seamless transactions when exploring the extensive range of power tools available
+Unfortunately, the power tools they sell are located in separate buildings. In each building, there are three main flows. The same identical products are sold in two buildings. Each flow is staffed by a single cashier. Therefore, there are six cashiers in these two buildings. With this approach, customers have easy access to assistance and seamless transactions when exploring the extensive range of power tools available
 
 </br>
 </br>
 
->Challenge </br>
+#### Challenge </br>
 
 The shop owner is requesting the system to manage his shop. He gave the below requirements for you to develop that system.
 1. He is planning to use one centralized database for those two buildings.
@@ -31,7 +31,7 @@ Password = " "
 * Database = Mysql </br>
 * Technologies = PHP/HTML/Boostrap/JS </br>
 
-#### Loginpage 
+#### Login page 
 <img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/8ad46778-d2e6-4f5d-a43f-bf85153fffe7" >
 
 >Here, If the login user is a Cashier, the user will be redirected to the Cashier dashboard. If the login user is a Manager, the user will be redirected to the Manager dashboard. 
@@ -54,7 +54,20 @@ Here, the Cashier has the access to edit and add new customers, products, and st
 #### Manager Dashboard 
 <img width="800" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/7edcd504-349d-46b6-9d22-82c440935091" >
 
->Here, the Cashier has the access to edit and add new customers, products, and stock. Only Manage has access to delete. 
 
-</br></br>
 
+
+* Customers </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/89f01f7f-738e-4e84-bd3f-30866dc8dd52" >
+* Product </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/91252712-a601-4e3c-98c6-79200a9258a2" >
+* Stock </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/55cefe0a-2d8c-4f5d-9977-cf222207cc2d" >
+* Sales </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/da59490c-a788-4353-8265-29603d359f26" >
+* Cashiers </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/5f3d71d5-34f0-4df1-a286-542be2133fd0" >
+* Reports </br>
+  ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/6e6c1ff4-de77-415b-951d-b7a161f4c204" >
+
+Here, the Manager has all access to edit, delete and add new customers, products, and stock.
