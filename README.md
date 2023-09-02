@@ -70,3 +70,44 @@ Here, the Cashier has the access to edit and add new customers, products, and st
   ><img width="700" alt="1" src="https://github.com/Imasha-Senadheera/Karunarathne-Industry/assets/121493197/fca8e5b4-88d8-4332-9119-9570ebc749d2" >
 
 Here, the Manager has all access to edit, delete, and add new customers, products, and stock.
+
+
+#### Requirements 
+
+ >Login page </br>
+-	When some user logged in, Login database table has to update with  UserID ,Username, Password, Role(Chashier/Manager) and LoginTime 
+-	Even if user logged in few times, database table has to update with every login details.
+-	After hitting the Login button, if the user is Cashier, user has to sent directly to cashier_dashboard.php. If the user is Manager, user has to sent directly to the manager_dashboard.php </br>
+-	Before 8am and after 6pm cashier doesn’t allowed to login. Only manager have access to login anytime. </br>
+</br>
+ 
+ > Cashier Dashboard </br>
+-	Cashier has access to customer, stock and products. 
+-	Cashier can edit and add new to to customer, stock and products but not allowed to delete anything.
+  </br>
+  
+>Manager Dashboard 
+-	Manager has access to customer, stock, products, Chashiers, reports and loyal customer details
+-	Manager has access to customer, stock and products and have all access to edit, delete and add new
+  
+</br></br>
+
+#### Dastabase Tables
+
+* Building : BuildingID (Primary Key), Location
+* Cashier : UserID (Primary Key), Name, FlowID
+* Product : ProductID (Primary Key), Name, Description, Price, Quantity
+* Customer : CustomerID (Primary Key), Name, Email, Phone, LoyaltyStatus
+* Sales : SaleID (Primary Key), UserID (Foreign Key), ProductID, StockID(Foreign Key), CustomerID, SaleDate, SaleTime, QuantitySold, TotalAmount
+* Stock : StockID (Primary Key),  ProductID (Foreign Key), GRN, Invoice, StockRenewedDate, Quantity, QuantitySold, QuantityRemaining
+* Flow : FlowID (Primary Key), BuildingID (Foreign Key)
+* Profit : ProfitID (Primary Key), FlowID (Foreign Key), Total_Profit
+* User : UserID (Primary Key), Username, Password,Role
+* Discount : DiscountID (Primary Key), CustomerID (Foreign Key), DiscountAmount
+* Login : LoginID, UserID, Username, Role, LoginTime 
+
+
+
+
+
+
